@@ -1,0 +1,15 @@
+.forms-control {
+  width: 50% !important;
+  margin: auto;
+  margin-top: 40px;
+}
+
+.forms-container {
+  width: 100%;
+  mat-form-field {
+    width: 100%;
+  }
+  button {
+    width: 100%;
+  }
+}

@@ -1,0 +1,29 @@
+.forms-control {
+  width: 50% !important;
+  margin: auto;
+  margin-top: 40px;
+}
+
+.forms-container {
+  width: 100%;
+  mat-form-field {
+    width: 100%;
+  }
+  button {
+    width: 100%;
+  }
+}
+
+.cruds {
+  margin-top: 40px;
+}
+
+.title-crud {
+  margin-left: 2.5%;
+  font-weight: bold;
+}
+
+.crud {
+  width: 95%;
+  margin: auto;
+}

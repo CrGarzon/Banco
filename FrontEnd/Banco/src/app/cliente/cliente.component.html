@@ -1,0 +1,75 @@
+<div class="forms-control">
+  <mat-accordion>
+    <mat-expansion-panel
+      [expanded]="step === 0"
+      (opened)="setStep(0)"
+      hideToggle
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Iniciar sesión
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="forms-container">
+        <mat-form-field appearance="fill">
+          <mat-label>Tipo de Documento</mat-label>
+          <mat-select>
+            <mat-option value="C">Cedula de ciudadania</mat-option>
+            <mat-option value="T">Tarjeta de Identidad</mat-option>
+            <mat-option value="E">Cedula de extranjeria</mat-option>
+            <mat-option value="P">Pasaporte</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <br />
+        <mat-form-field appearance="fill">
+          <mat-label>Número de documento</mat-label>
+          <input matInput />
+        </mat-form-field>
+        <br />
+        <mat-form-field appearance="fill">
+          <mat-label>Contraseña</mat-label>
+          <input matInput type="password" />
+        </mat-form-field>
+        <br />
+        <button mat-raised-button color="primary">Iniciar Sesión</button>
+      </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel
+      [expanded]="step === 1"
+      (opened)="setStep(1)"
+      hideToggle
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Rregistro
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="forms-container">
+        <mat-form-field appearance="fill">
+          <mat-label>Tipo de Documento</mat-label>
+          <mat-select>
+            <mat-option value="C">Cedula de ciudadania</mat-option>
+            <mat-option value="T">Tarjeta de Identidad</mat-option>
+            <mat-option value="E">Cedula de extranjeria</mat-option>
+            <mat-option value="P">Pasaporte</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <br />
+        <mat-form-field appearance="fill">
+          <mat-label>Número de documento</mat-label>
+          <input matInput />
+        </mat-form-field>
+        <br />
+        <mat-form-field appearance="fill">
+          <mat-label>Contraseña</mat-label>
+          <input matInput type="password" />
+        </mat-form-field>
+        <br />
+        <button mat-raised-button color="primary">Registrarse</button>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

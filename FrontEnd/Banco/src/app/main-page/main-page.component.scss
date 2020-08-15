@@ -1,0 +1,26 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 200px;
+}
+
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.body-container {
+  background-color: rgb(230, 230, 230);
+}
+
+mat-nav-list > a.active {
+  background-color: rgb(63, 81, 181);
+  color: white;
+}

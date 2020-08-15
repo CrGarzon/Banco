@@ -1,0 +1,78 @@
+<div class="forms-control">
+  <mat-accordion>
+    <mat-expansion-panel
+      [expanded]="step === 0"
+      (opened)="setStep(0)"
+      hideToggle
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Iniciar sesión
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="forms-container">
+        <mat-form-field appearance="fill">
+          <mat-label>Tipo de Documento</mat-label>
+          <mat-select>
+            <mat-option value="C">Cedula de ciudadania</mat-option>
+            <mat-option value="T">Tarjeta de Identidad</mat-option>
+            <mat-option value="E">Cedula de extranjeria</mat-option>
+            <mat-option value="P">Pasaporte</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <br />
+        <mat-form-field appearance="fill">
+          <mat-label>Número de documento</mat-label>
+          <input matInput />
+        </mat-form-field>
+        <br />
+        <mat-form-field appearance="fill">
+          <mat-label>Contraseña</mat-label>
+          <input matInput type="password" />
+        </mat-form-field>
+        <br />
+        <button mat-raised-button color="primary">Iniciar Sesión</button>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+
+<div class="cruds">
+  <h3 class="title-crud">Operaciones Clientes</h3>
+  <div class="crud-container-cliente crud">
+    <mat-tab-group>
+      <mat-tab label="Agregar"> Content 1 </mat-tab>
+      <mat-tab label="Modificar"> Content 2 </mat-tab>
+      <mat-tab label="Listar"> Content 3 </mat-tab>
+      <mat-tab label="Buscar"> Content 3 </mat-tab>
+      <mat-tab label="Reporte Estado Clientes"> Content 3 </mat-tab>
+    </mat-tab-group>
+  </div>
+  <br />
+
+  <h3 class="title-crud">Operaciones Cuentas</h3>
+  <div class="crud-container-cuenta crud">
+    <mat-tab-group>
+      <mat-tab label="Agregar"> Content 1 </mat-tab>
+      <mat-tab label="Modificar"> Content 2 </mat-tab>
+      <mat-tab label="Listar"> Content 3 </mat-tab>
+      <mat-tab label="Buscar"> Content 3 </mat-tab>
+      <mat-tab label="Reporte Ingresos"> Content 3 </mat-tab>
+      <mat-tab label="Reporte Egresos"> Content 3 </mat-tab>
+      <mat-tab label="Reporte Estado Cuentas"> Content 3 </mat-tab>
+    </mat-tab-group>
+  </div>
+  <br />
+
+  <h3 class="title-crud">Operaciones Administrador</h3>
+  <div class="crud-container-admin crud">
+    <mat-tab-group>
+      <mat-tab label="Agregar"> Content 1 </mat-tab>
+      <mat-tab label="Modificar"> Content 2 </mat-tab>
+      <mat-tab label="Listar"> Content 3 </mat-tab>
+      <mat-tab label="Buscar"> Content 3 </mat-tab>
+    </mat-tab-group>
+  </div>
+  <br />
+</div>
