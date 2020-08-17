@@ -1,8 +1,10 @@
 package com.banco.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +16,7 @@ import com.banco.entities.Cuenta;
 import com.banco.extras.PrimaryKey;
 import com.banco.repositories.ClienteRepository;
 
+@CrossOrigin
 @RestController
 public class ClienteService  {
 
@@ -23,14 +26,9 @@ public class ClienteService  {
 	@Autowired
 	private ClienteRepository clienteRepositoryDAO;
 
-	@RequestMapping (path="/getClienteEstadoInac", method = RequestMethod.GET)
-	public @ResponseBody Iterable<Cliente> getClienteEstadoInac(@RequestParam boolean estado){
-		return clienteRepositoryDAO.findAllByEstado(false);
-	}
-
-	@RequestMapping (path="/getClienteEstadoAC", method = RequestMethod.GET)
-	public @ResponseBody Iterable<Cliente> getClienteEstadoAC(@RequestParam boolean estado){
-		return clienteRepositoryDAO.findAllByEstado(true);
+	@RequestMapping (path="/getClienteByEstado", method = RequestMethod.GET)
+	public @ResponseBody Iterable<Cliente> getClienteByEstado(@RequestParam boolean estado){
+		return clienteRepositoryDAO.findAllByEstado(estado);
 	}
 
 	@RequestMapping (path="/getCliente",method = RequestMethod.GET)
@@ -52,14 +50,14 @@ public class ClienteService  {
 
 	@RequestMapping(path="/saveCliente", method = RequestMethod.POST)
 	public @ResponseBody String saveCliente(
-			@RequestParam String tipoDocumento,
+			@RequestParam String tipodocumento,
 			@RequestParam String documento,
 			@RequestParam String clave, 
 			@RequestParam boolean estado
 			) {
 		PrimaryKey pk = new PrimaryKey();
 		pk.setDocumento(documento);
-		pk.setTipoDocumento(tipoDocumento);
+		pk.setTipoDocumento(tipodocumento);
 
 		Optional<Cliente> optAdm =  clienteRepositoryDAO.findById(pk);
 		if(!optAdm.isPresent()) {
@@ -93,11 +91,8 @@ public class ClienteService  {
 			cuentaRepositoryDAO.deleteById(optCuenta.get().getId());	
 		}
 		clienteRepositoryDAO.deleteById(pk);
-
 		return "Se ha eliminado el Cliente";
 	}
-
-
 
 	@RequestMapping(path="/updateCliente", method = RequestMethod.PUT)
 	public @ResponseBody String updateCliete(
@@ -122,7 +117,39 @@ public class ClienteService  {
 		else {
 			return"No existe el usurio para actualizar";
 		}
-
-
 	}
+	//SQL Services Procedimientos
+	@RequestMapping(path="/saveClienteSQL", method = RequestMethod.POST)
+	public @ResponseBody String saveClienteSQL(@RequestParam String documento, @RequestParam String tipodocumento,
+			@RequestParam String clave, @RequestParam String estado) {
+		return clienteRepositoryDAO.saveClienteSQL(documento, tipodocumento, clave, estado);
+	}
+
+	@RequestMapping(path="/updateClienteSQL", method = RequestMethod.PUT)
+	public @ResponseBody String updateClienteSQL(@RequestParam String documento, @RequestParam String tipodocumento,
+			@RequestParam String clave, @RequestParam String estado) {
+		return clienteRepositoryDAO.updateClienteSQL(documento, tipodocumento, clave, estado);
+	}
+
+	@RequestMapping(path="/deleteClienteSQL", method = RequestMethod.DELETE)
+	public @ResponseBody String deleteClienteSQL(@RequestParam String documento, @RequestParam String tipodocumento) {
+		return clienteRepositoryDAO.deleteClienteSQL(documento, tipodocumento);
+	}
+
+	//SQL Services Funciones
+	@RequestMapping (path="/getClienteSQL", method =RequestMethod.GET)
+	public @ResponseBody List<Cliente> getClienteSQL(){
+		return clienteRepositoryDAO.getClienteSQL();
+	}
+
+	@RequestMapping (path="/getClienteByIdSQL", method = RequestMethod.GET)
+	public @ResponseBody List<Cliente> getClienteByIdSQL(@RequestParam String documento, @RequestParam String tipodocumento) {
+		return clienteRepositoryDAO.getClienteByIdSQL(documento, tipodocumento);
+	}
+
+	@RequestMapping (path="/getClienteByEstadoSQL", method =RequestMethod.GET)
+	public @ResponseBody List<Cliente> getClienteByEstadoSQL(@RequestParam String estado){
+		return clienteRepositoryDAO.getClienteByEstadoSQL(estado);
+	}
+
 }

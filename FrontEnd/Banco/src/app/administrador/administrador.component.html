@@ -1,10 +1,11 @@
-<div class="forms-control">
+<div style="width: 100%;" *ngIf="logged">
+  <button mat-raised-button color="primary" (click)="logout()" style="position: absolute; right: 10px;">
+    Cerrar Sesión
+  </button>
+</div>
+<div class="forms-control" *ngIf="!logged">
   <mat-accordion>
-    <mat-expansion-panel
-      [expanded]="step === 0"
-      (opened)="setStep(0)"
-      hideToggle
-    >
+    <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
       <mat-expansion-panel-header>
         <mat-panel-title>
           Iniciar sesión
@@ -14,7 +15,7 @@
       <div class="forms-container">
         <mat-form-field appearance="fill">
           <mat-label>Tipo de Documento</mat-label>
-          <mat-select>
+          <mat-select [(ngModel)]="tipoDocumento">
             <mat-option value="C">Cedula de ciudadania</mat-option>
             <mat-option value="T">Tarjeta de Identidad</mat-option>
             <mat-option value="E">Cedula de extranjeria</mat-option>
@@ -24,54 +25,336 @@
         <br />
         <mat-form-field appearance="fill">
           <mat-label>Número de documento</mat-label>
-          <input matInput />
+          <input matInput [(ngModel)]="documento" />
         </mat-form-field>
         <br />
         <mat-form-field appearance="fill">
           <mat-label>Contraseña</mat-label>
-          <input matInput type="password" />
+          <input matInput type="password" [(ngModel)]="clave" />
         </mat-form-field>
         <br />
-        <button mat-raised-button color="primary">Iniciar Sesión</button>
+        <button mat-raised-button color="primary" (click)="login()">Iniciar Sesión</button>
       </div>
     </mat-expansion-panel>
   </mat-accordion>
 </div>
 
-<div class="cruds">
+<div class="cruds" *ngIf="logged">
   <h3 class="title-crud">Operaciones Clientes</h3>
   <div class="crud-container-cliente crud">
     <mat-tab-group>
-      <mat-tab label="Agregar"> Content 1 </mat-tab>
-      <mat-tab label="Modificar"> Content 2 </mat-tab>
-      <mat-tab label="Listar"> Content 3 </mat-tab>
-      <mat-tab label="Buscar"> Content 3 </mat-tab>
-      <mat-tab label="Reporte Estado Clientes"> Content 3 </mat-tab>
+      <mat-tab label="Agregar">
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Tipo de Documento</mat-label>
+            <mat-select [(ngModel)]="tipoDocumentoNVc">
+              <mat-option value="C">Cedula de ciudadania</mat-option>
+              <mat-option value="T">Tarjeta de Identidad</mat-option>
+              <mat-option value="E">Cedula de extranjeria</mat-option>
+              <mat-option value="P">Pasaporte</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <br />
+          <mat-form-field appearance="fill">
+            <mat-label>Número de documento</mat-label>
+            <input matInput [(ngModel)]="documentoNVc" />
+          </mat-form-field>
+          <br />
+          <mat-form-field appearance="fill">
+            <mat-label>Contraseña</mat-label>
+            <input matInput type="password" [(ngModel)]="claveNVc" />
+          </mat-form-field>
+          <br />
+          <button mat-raised-button color="primary" (click)="agregar(1)">Crear cliente</button>
+        </div>
+      </mat-tab>
+      <mat-tab label="Listar">
+        <mat-table [dataSource]="clientes" class="mat-elevation-z8">
+          <ng-container matColumnDef="tipoDocumento">
+            <mat-header-cell *matHeaderCellDef> Tipo Documento </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.id.tipoDocumento }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="documento">
+            <mat-header-cell *matHeaderCellDef> Documento </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.id.documento }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="estado">
+            <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.estado | activeBlocked }} </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="ColsClientes"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: ColsClientes"></mat-row>
+        </mat-table>
+      </mat-tab>
+      <mat-tab label="Reporte Clientes Activos">
+        <mat-table [dataSource]="clientesEstadoAct" class="mat-elevation-z8">
+          <ng-container matColumnDef="tipoDocumento">
+            <mat-header-cell *matHeaderCellDef> Tipo Documento </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.id.tipoDocumento }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="documento">
+            <mat-header-cell *matHeaderCellDef> Documento </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.id.documento }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="estado">
+            <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.estado | activeBlocked }} </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="ColsClientes"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: ColsClientes"></mat-row>
+        </mat-table>
+      </mat-tab>
+      <mat-tab label="Reporte Clientes Inactivos">
+        <mat-table [dataSource]="clientesEstadoIna" class="mat-elevation-z8">
+          <ng-container matColumnDef="tipoDocumento">
+            <mat-header-cell *matHeaderCellDef> Tipo Documento </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.id.tipoDocumento }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="documento">
+            <mat-header-cell *matHeaderCellDef> Documento </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.id.documento }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="estado">
+            <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.estado | activeBlocked }} </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="ColsClientes"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: ColsClientes"></mat-row>
+        </mat-table>
+      </mat-tab>
     </mat-tab-group>
   </div>
+  <br />
+  <mat-divider></mat-divider>
   <br />
 
   <h3 class="title-crud">Operaciones Cuentas</h3>
   <div class="crud-container-cuenta crud">
     <mat-tab-group>
-      <mat-tab label="Agregar"> Content 1 </mat-tab>
-      <mat-tab label="Modificar"> Content 2 </mat-tab>
-      <mat-tab label="Listar"> Content 3 </mat-tab>
-      <mat-tab label="Buscar"> Content 3 </mat-tab>
-      <mat-tab label="Reporte Ingresos"> Content 3 </mat-tab>
-      <mat-tab label="Reporte Egresos"> Content 3 </mat-tab>
-      <mat-tab label="Reporte Estado Cuentas"> Content 3 </mat-tab>
+      <mat-tab label="Agregar">
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Seleccione el tipo de Cuenta</mat-label>
+            <mat-select [(ngModel)]="tipoCuentaNV">
+              <mat-option value="1">Cuenta de Ahorros</mat-option>
+              <mat-option value="3">Cuenta Corriente</mat-option>
+              <mat-option value="4">Tarjeta de Crédito</mat-option>
+              <mat-option value="2">Cuenta Hipotecaria</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <br />
+          <mat-form-field appearance="fill">
+            <mat-label>Tipo de Documento</mat-label>
+            <mat-select [(ngModel)]="tipoDocumentoNVk">
+              <mat-option value="C">Cedula de ciudadania</mat-option>
+              <mat-option value="T">Tarjeta de Identidad</mat-option>
+              <mat-option value="E">Cedula de extranjeria</mat-option>
+              <mat-option value="P">Pasaporte</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <br />
+          <mat-form-field appearance="fill">
+            <mat-label>Número de documento</mat-label>
+            <input matInput [(ngModel)]="documentoNVk" />
+          </mat-form-field>
+          <br />
+          <button mat-raised-button color="primary" (click)="agregar(2)">Crear Cuenta</button>
+        </div>
+      </mat-tab>
+      <mat-tab label="Listar">
+        <mat-table [dataSource]="cuentas" class="mat-elevation-z8">
+          <ng-container matColumnDef="tipoCuenta">
+            <mat-header-cell *matHeaderCellDef> Tipo Documento </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.tipoCuenta.nombre }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="documento">
+            <mat-header-cell *matHeaderCellDef> Documento </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.cliente.id.documento }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="saldo">
+            <mat-header-cell *matHeaderCellDef> Saldo </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.saldo | currency: 'COP':'$' }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="estado">
+            <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.estado | activeBlocked }} </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="colsCuentas"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: colsCuentas"></mat-row>
+        </mat-table>
+      </mat-tab>
+      <mat-tab label="Reporte Ingresos">
+        <mat-table [dataSource]="reportesIngresos" class="mat-elevation-z8">
+          <ng-container matColumnDef="tipoMovimiento">
+            <mat-header-cell *matHeaderCellDef> Movimiento </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.tipoMovimiento }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="fecha">
+            <mat-header-cell *matHeaderCellDef> Fecha </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.fecha | date: 'dd/MM/yyyy' }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="documento">
+            <mat-header-cell *matHeaderCellDef> Cliente </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.cantidad | currency: 'COP':'$' }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="cantidad">
+            <mat-header-cell *matHeaderCellDef> Cantidad </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.cliente.id.documento }} </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="colsReportes"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: colsReportes"></mat-row>
+        </mat-table>
+      </mat-tab>
+      <mat-tab label="Reporte Egresos">
+        <mat-table [dataSource]="reportesEgresos" class="mat-elevation-z8">
+          <ng-container matColumnDef="tipoMovimiento">
+            <mat-header-cell *matHeaderCellDef> Movimiento </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.tipoMovimiento }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="fecha">
+            <mat-header-cell *matHeaderCellDef> Fecha </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.fecha | date: 'dd/MM/yyyy' }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="documento">
+            <mat-header-cell *matHeaderCellDef> Cliente </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.cantidad | currency: 'COP':'$' }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="cantidad">
+            <mat-header-cell *matHeaderCellDef> Cantidad </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.cliente.id.documento }} </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="colsReportes"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: colsReportes"></mat-row>
+        </mat-table>
+      </mat-tab>
+      <mat-tab label="Reporte Cuentas Activas">
+        <mat-table [dataSource]="cuentasEstadoAct" class="mat-elevation-z8">
+          <ng-container matColumnDef="tipoCuenta">
+            <mat-header-cell *matHeaderCellDef> Tipo Documento </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.tipoCuenta.nombre }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="documento">
+            <mat-header-cell *matHeaderCellDef> Documento </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.cliente.id.documento }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="saldo">
+            <mat-header-cell *matHeaderCellDef> Saldo </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.saldo | currency: 'COP':'$' }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="estado">
+            <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.estado | activeBlocked }} </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="colsCuentas"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: colsCuentas"></mat-row>
+        </mat-table>
+      </mat-tab>
+      <mat-tab label="Reporte Cuentas Inactivas">
+        <mat-table [dataSource]="cuentasEstadoIna" class="mat-elevation-z8">
+          <ng-container matColumnDef="tipoCuenta">
+            <mat-header-cell *matHeaderCellDef> Tipo Documento </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.tipoCuenta.nombre }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="documento">
+            <mat-header-cell *matHeaderCellDef> Documento </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.cliente.id.documento }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="saldo">
+            <mat-header-cell *matHeaderCellDef> Saldo </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.saldo | currency: 'COP':'$' }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="estado">
+            <mat-header-cell *matHeaderCellDef> Estado </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.estado | activeBlocked }} </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="colsCuentas"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: colsCuentas"></mat-row>
+        </mat-table>
+      </mat-tab>
     </mat-tab-group>
   </div>
+  <br />
+  <mat-divider></mat-divider>
   <br />
 
   <h3 class="title-crud">Operaciones Administrador</h3>
   <div class="crud-container-admin crud">
     <mat-tab-group>
-      <mat-tab label="Agregar"> Content 1 </mat-tab>
-      <mat-tab label="Modificar"> Content 2 </mat-tab>
-      <mat-tab label="Listar"> Content 3 </mat-tab>
-      <mat-tab label="Buscar"> Content 3 </mat-tab>
+      <mat-tab label="Agregar">
+        <div>
+          <mat-form-field appearance="fill">
+            <mat-label>Tipo de Documento</mat-label>
+            <mat-select [(ngModel)]="tipoDocumentoNVa">
+              <mat-option value="C">Cedula de ciudadania</mat-option>
+              <mat-option value="T">Tarjeta de Identidad</mat-option>
+              <mat-option value="E">Cedula de extranjeria</mat-option>
+              <mat-option value="P">Pasaporte</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <br />
+          <mat-form-field appearance="fill">
+            <mat-label>Número de documento</mat-label>
+            <input matInput [(ngModel)]="documentoNVa" />
+          </mat-form-field>
+          <br />
+          <mat-form-field appearance="fill">
+            <mat-label>Contraseña</mat-label>
+            <input matInput type="password" [(ngModel)]="claveNVa" />
+          </mat-form-field>
+          <br />
+          <button mat-raised-button color="primary" (click)="agregar(3)">Crear Administrador</button>
+        </div>
+      </mat-tab>
+      <mat-tab label="Listar">
+        <mat-table [dataSource]="administradores" class="mat-elevation-z8">
+          <ng-container matColumnDef="tipoDocumento">
+            <mat-header-cell *matHeaderCellDef> Tipo Documento </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.tipoDocumento }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="documento">
+            <mat-header-cell *matHeaderCellDef> Documento </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.documento }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="nombre">
+            <mat-header-cell *matHeaderCellDef> Nombre </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element.nombre }} </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="colsAdmin"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: colsAdmin"></mat-row>
+        </mat-table>
+      </mat-tab>
     </mat-tab-group>
   </div>
   <br />

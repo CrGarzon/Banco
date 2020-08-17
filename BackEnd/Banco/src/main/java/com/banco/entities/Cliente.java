@@ -5,18 +5,60 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureParameter;
 import javax.persistence.Table;
-
 import com.banco.extras.PrimaryKey;
-
 import javax.persistence.FetchType;
+import javax.persistence.NamedStoredProcedureQuery;
+
+@NamedStoredProcedureQuery(
+		name = Cliente.SAVE_CLIENTE,
+		procedureName = "PAQUETE_CLIENTE_SERVICES.SAVE_CLIENTE",
+		resultClasses = Cliente.class,
+		parameters = {
+				@StoredProcedureParameter(name = "P_DOCUMENTO", type = Long.class, mode = ParameterMode.IN),
+				@StoredProcedureParameter(name = "P_TIPO_DOCUMENTO", type = String.class, mode = ParameterMode.IN),
+				@StoredProcedureParameter(name = "P_CLAVE", type = String.class, mode = ParameterMode.IN),
+				@StoredProcedureParameter(name = "P_ESTADO", type = String.class, mode = ParameterMode.IN),
+				@StoredProcedureParameter(name = "RESPUESTA", type = String.class, mode = ParameterMode.OUT)
+		}
+		)
+
+@NamedStoredProcedureQuery(
+		name = Cliente.UPDATE_CLIENTE,
+		procedureName = "PAQUETE_CLIENTE_SERVICES.UPDATE_CLIENTE",
+		resultClasses =Cliente.class,
+		parameters = {
+				@StoredProcedureParameter(name = "P_DOCUMENTO", type = Long.class, mode = ParameterMode.IN),
+				@StoredProcedureParameter(name = "P_TIPO_DOCUMENTO", type = String.class, mode = ParameterMode.IN),
+				@StoredProcedureParameter(name = "P_CLAVE", type = String.class, mode = ParameterMode.IN),
+				@StoredProcedureParameter(name = "P_ESTADO", type = String.class, mode = ParameterMode.IN),
+				@StoredProcedureParameter(name = "RESPUESTA", type = String.class, mode = ParameterMode.OUT)
+		}
+		)
+
+@NamedStoredProcedureQuery(
+		name = Cliente.DELETE_CLIENTE,
+		procedureName = "PAQUETE_CLIENTE_SERVICES.DELETE_CLIENTE",
+		resultClasses = Cliente.class,
+		parameters = {
+				@StoredProcedureParameter(name = "P_DOCUMENTO", type = Long.class, mode = ParameterMode.IN),
+				@StoredProcedureParameter(name = "P_TIPO_DOCUMENTO", type = String.class, mode = ParameterMode.IN),
+				@StoredProcedureParameter(name = "RESPUESTA", type = String.class, mode = ParameterMode.OUT)
+		}
+		)
 
 @Entity
 @Table(name = "CLIENTE")
 public class Cliente {
+	
+	//Procedimientos
+		public static final String SAVE_CLIENTE = "save_cliente";
+		public static final String UPDATE_CLIENTE = "update_cliente";
+		public static final String DELETE_CLIENTE = "delete_cliente";	
 	
 	@EmbeddedId
 	private PrimaryKey id;
@@ -54,22 +96,6 @@ public class Cliente {
 
 	public void setEstado(boolean estado) {
 		this.estado = estado;
-	}
-
-	public Cuenta getCuenta() {
-		return cuenta;
-	}
-
-	public void setCuenta(Cuenta cuenta) {
-		this.cuenta = cuenta;
-	}
-
-	public List<Reportes> getReportes() {
-		return reportes;
-	}
-
-	public void setReportes(List<Reportes> reportes) {
-		this.reportes = reportes;
 	}
 
 }

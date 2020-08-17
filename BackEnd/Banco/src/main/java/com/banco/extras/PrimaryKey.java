@@ -6,17 +6,12 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class PrimaryKey implements Serializable{
-
 	private static final long serialVersionUID = 1L;
 
-	
-	
 	public String tipoDocumento;
 	public String documento;
-	
-	public PrimaryKey () {
-		
-	}
+
+	public PrimaryKey () { }
 
 	public String getTipoDocumento() {
 		return tipoDocumento;
@@ -33,6 +28,5 @@ public class PrimaryKey implements Serializable{
 	public void setDocumento(String documento) {
 		this.documento = documento;
 	}
-
 
 }

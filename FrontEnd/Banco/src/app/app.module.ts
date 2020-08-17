@@ -1,5 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,14 +24,13 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatTableModule } from '@angular/material/table';
+import { ActiveBlockedPipe } from './pipes/active-blocked.pipe';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    MainPageComponent,
-    AdministradorComponent,
-    ClienteComponent,
-  ],
+  declarations: [AppComponent, MainPageComponent, AdministradorComponent, ClienteComponent, ActiveBlockedPipe],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -49,8 +50,13 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatInputModule,
     MatSelectModule,
     MatTabsModule,
+    HttpClientModule,
+    FormsModule,
+    MatSnackBarModule,
+    MatDividerModule,
+    MatTableModule
   ],
   providers: [],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

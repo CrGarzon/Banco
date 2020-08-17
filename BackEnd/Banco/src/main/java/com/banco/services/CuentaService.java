@@ -1,8 +1,9 @@
 package com.banco.services;
 
+import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,7 @@ import com.banco.repositories.ClienteRepository;
 import com.banco.repositories.CuentaRepository;
 import com.banco.repositories.TipoCuentaRepository;
 
+@CrossOrigin
 @RestController
 public class CuentaService {
 
@@ -28,7 +30,6 @@ public class CuentaService {
 	@Autowired
 	private CuentaRepository cuentaRepositoryDAO;
 
-
 	@RequestMapping(path="/deleteCuenta", method = RequestMethod.DELETE)
 	public @ResponseBody String deleteCuenta(@RequestParam long id){
 		Optional<Cuenta> optrepor = cuentaRepositoryDAO.findById(id);
@@ -38,7 +39,6 @@ public class CuentaService {
 		}else { 
 			return "No Existe cuenta para eliminar";
 		}
-
 	}
 
 	@RequestMapping(path="/updateCuenta", method = RequestMethod.PUT)
@@ -80,7 +80,6 @@ public class CuentaService {
 		}
 
 		Optional<TipoCuenta> optTipoCuenta = tipoCuentaRepositoryDAO.findById(idTipoCuenta);
-
 		PrimaryKey pk = new PrimaryKey();
 		pk.setDocumento(documento);
 		pk.setTipoDocumento(tipoDocumento);
@@ -105,7 +104,6 @@ public class CuentaService {
 		cuenta.setSaldo(saldo);
 		cuenta.setEstado(estado);		
 		cuentaRepositoryDAO.save(cuenta);
-
 		return "La cuenta se ha guardado satisfactoriamente";
 	}
 
@@ -121,14 +119,9 @@ public class CuentaService {
 
 	}
 
-	@RequestMapping (path="/getCuentaEstadoAct", method = RequestMethod.GET)
-	public @ResponseBody Iterable<Cuenta> getCuentaEstadoAct(){
-		return cuentaRepositoryDAO.findAllByEstado(true);
-	}
-
-	@RequestMapping (path="/getCuentaEstadoInact", method = RequestMethod.GET)
-	public @ResponseBody Iterable<Cuenta> getCuentaEstadoInac(){
-		return cuentaRepositoryDAO.findAllByEstado(false);
+	@RequestMapping (path="/getCuentaByEstado", method = RequestMethod.GET)
+	public @ResponseBody Iterable<Cuenta> getCuentaByEstado(@RequestParam boolean estado){
+		return cuentaRepositoryDAO.findAllByEstado(estado);
 	}
 
 	@RequestMapping (path="/getCuentaById", method = RequestMethod.GET)
@@ -139,6 +132,57 @@ public class CuentaService {
 		}
 		return null;
 	}
+	
+	@RequestMapping (path="/getCuentaByCliente", method = RequestMethod.GET)
+	public @ResponseBody Optional<Cuenta> getCuentaByCliente(@RequestParam String tipoDocumento, @RequestParam String documento){
+		PrimaryKey pk = new PrimaryKey();
+		pk.setDocumento(documento);
+		pk.setTipoDocumento(tipoDocumento);
+		
+		Optional<Cliente> optCliente = clienteRepositoryDAO.findById(pk);
+		Optional<Cuenta> optCuenta = cuentaRepositoryDAO.findByCliente(optCliente.get());
+		if(optCuenta.isPresent()) {			
+			return optCuenta;
+		}
+		return null;
+	}
+
+	//SQL Services Procedimientos
+	@RequestMapping(path="/saveCuentaSQL", method = RequestMethod.POST)
+	public @ResponseBody String saveCuentaSQL(@RequestParam long id, @RequestParam double saldo, @RequestParam boolean estado,@RequestParam String documento,
+			@RequestParam String tipo_documento, @RequestParam String id_tipo_cuenta) {
+		return cuentaRepositoryDAO.saveCuentaSQL(id, saldo, estado, documento, tipo_documento, id_tipo_cuenta);
+	}
+
+	@RequestMapping(path="/updateCuentaSQL", method = RequestMethod.PUT)
+	public @ResponseBody String updateCuentaSQL(@RequestParam long id, @RequestParam double saldo, @RequestParam boolean estado,@RequestParam String documento,
+			@RequestParam String tipo_documento, @RequestParam String id_tipo_cuenta) {
+		return cuentaRepositoryDAO.updateCuentaSQL(id, saldo, estado, documento, tipo_documento, id_tipo_cuenta);
+	}
+
+	@RequestMapping(path="/deleteCuentaSQL", method = RequestMethod.DELETE)
+	public @ResponseBody String deleteCuentaSQL(@RequestParam long id) {
+		return cuentaRepositoryDAO.deleteCuentaSQL(id);
+	}
+
+	//SQL Services Funciones
+	@RequestMapping (path="/getCuentaSQL", method =RequestMethod.GET)
+	public @ResponseBody List<Cuenta> getCuentaSQL(){
+		return cuentaRepositoryDAO.getCuentaSQL();
+	}
+
+	@RequestMapping (path="/getCuentaByIdSQL", method = RequestMethod.GET)
+	public @ResponseBody List<Cuenta> getCuentaByIdSQL(@RequestParam long id) {
+		return cuentaRepositoryDAO.getCuentaByIdSQL(id);
+
+	}
+	@RequestMapping (path="/getCuentaByEstadoSQL", method = RequestMethod.GET)
+	public @ResponseBody List<Cuenta> getCuentaByEstadoSQL(@RequestParam boolean estado) {
+		return cuentaRepositoryDAO.getCuentaByEstadoSQL(estado);		
+	}
+	@RequestMapping (path="/getCuentaBySaldoSQL", method = RequestMethod.GET)
+	public @ResponseBody List<Cuenta> getCuentaBySaldoSQL(@RequestParam double saldo) {
+		return cuentaRepositoryDAO.getCuentaBySaldoSQL(saldo);
+	}
 
 }
-

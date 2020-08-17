@@ -1,10 +1,11 @@
-<div class="forms-control">
+<div style="width: 100%;" *ngIf="logged">
+  <button mat-raised-button color="primary" (click)="logout()" style="position: absolute; right: 10px;">
+    Cerrar Sesión
+  </button>
+</div>
+<div class="forms-control" *ngIf="!logged">
   <mat-accordion>
-    <mat-expansion-panel
-      [expanded]="step === 0"
-      (opened)="setStep(0)"
-      hideToggle
-    >
+    <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
       <mat-expansion-panel-header>
         <mat-panel-title>
           Iniciar sesión
@@ -14,7 +15,7 @@
       <div class="forms-container">
         <mat-form-field appearance="fill">
           <mat-label>Tipo de Documento</mat-label>
-          <mat-select>
+          <mat-select [(ngModel)]="tipoDocumento">
             <mat-option value="C">Cedula de ciudadania</mat-option>
             <mat-option value="T">Tarjeta de Identidad</mat-option>
             <mat-option value="E">Cedula de extranjeria</mat-option>
@@ -24,33 +25,29 @@
         <br />
         <mat-form-field appearance="fill">
           <mat-label>Número de documento</mat-label>
-          <input matInput />
+          <input matInput [(ngModel)]="documento" />
         </mat-form-field>
         <br />
         <mat-form-field appearance="fill">
           <mat-label>Contraseña</mat-label>
-          <input matInput type="password" />
+          <input matInput type="password" [(ngModel)]="clave" />
         </mat-form-field>
         <br />
-        <button mat-raised-button color="primary">Iniciar Sesión</button>
+        <button mat-raised-button color="primary" (click)="login()">Iniciar Sesión</button>
       </div>
     </mat-expansion-panel>
 
-    <mat-expansion-panel
-      [expanded]="step === 1"
-      (opened)="setStep(1)"
-      hideToggle
-    >
+    <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
       <mat-expansion-panel-header>
         <mat-panel-title>
-          Rregistro
+          Registro
         </mat-panel-title>
       </mat-expansion-panel-header>
 
       <div class="forms-container">
         <mat-form-field appearance="fill">
           <mat-label>Tipo de Documento</mat-label>
-          <mat-select>
+          <mat-select [(ngModel)]="tipoDocumento">
             <mat-option value="C">Cedula de ciudadania</mat-option>
             <mat-option value="T">Tarjeta de Identidad</mat-option>
             <mat-option value="E">Cedula de extranjeria</mat-option>
@@ -60,16 +57,47 @@
         <br />
         <mat-form-field appearance="fill">
           <mat-label>Número de documento</mat-label>
-          <input matInput />
+          <input matInput [(ngModel)]="documento" />
         </mat-form-field>
         <br />
         <mat-form-field appearance="fill">
           <mat-label>Contraseña</mat-label>
-          <input matInput type="password" />
+          <input matInput type="password" [(ngModel)]="clave" />
         </mat-form-field>
         <br />
-        <button mat-raised-button color="primary">Registrarse</button>
+        <button mat-raised-button color="primary" (click)="registrarse()">Registrarse</button>
       </div>
     </mat-expansion-panel>
   </mat-accordion>
+</div>
+
+<div class="solicitar-cuenta" *ngIf="solicitarC">
+  <h2>Solicitar Cuenta</h2>
+  <mat-form-field appearance="fill">
+    <mat-label>Seleccione el tipo de Cuenta</mat-label>
+    <mat-select [(ngModel)]="tipoCuenta">
+      <mat-option value="1">Cuenta de Ahorros</mat-option>
+      <mat-option value="3">Cuenta Corriente</mat-option>
+      <mat-option value="4">Tarjeta de Crédito</mat-option>
+      <mat-option value="2">Cuenta Hipotecaria</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <br />
+  <button mat-raised-button color="primary" (click)="solicitarCuenta()">Solicitar Cuenta</button>
+</div>
+
+<div class="detalle-cuenta" *ngIf="infoCuenta">
+  <h2>Detalles de la cuenta</h2>
+  <p><b>Tipo de cuenta: </b>{{ nombretipocuenta }}</p>
+  <p><b>Saldo actual: </b>{{ saldo | currency: 'COP':'$' }}</p>
+  <br />
+  <br />
+  <h2>Operaciones</h2>
+  <mat-form-field appearance="fill">
+    <mat-label>Cantidad</mat-label>
+    <input matInput [(ngModel)]="cantidad" />
+  </mat-form-field>
+  <br />
+  <button mat-raised-button color="basic" (click)="operaciones(1)">Ingresar</button>
+  <button mat-raised-button color="primary" (click)="operaciones(2)">Retirar</button>
 </div>
